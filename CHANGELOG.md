@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.9 - 2026-06-24
+
+- Adds row-card `row_padding` and `tank_gap` layout controls.
+
 ## 0.2.8 - 2026-06-24
 
 - Improves Home Assistant Sections defaults so new single-tank cards use a compact grid footprint.

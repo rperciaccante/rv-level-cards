@@ -711,6 +711,8 @@
     { name: 'card_background', label: 'Card background CSS value', selector: { text: {} } },
     { name: 'title_font_size', label: 'Heading font size', selector: { text: {} } },
     { name: 'title_align', label: 'Heading alignment', selector: { select: { mode: 'dropdown', options: TITLE_ALIGN_OPTIONS } } },
+    { name: 'row_padding', label: 'Outer padding', selector: { text: {} } },
+    { name: 'tank_gap', label: 'Gap between tanks', selector: { text: {} } },
   ];
 
   const formKeys = (schema) => schema.map((item) => item.name);
@@ -1157,8 +1159,10 @@
       const title = cfg.title ? `<div class="rvtitle">${cfg.title}</div>` : '';
       const rowTitleSize = cssSize(cfg.title_font_size, '1rem');
       const rowTitleAlign = titleAlign(cfg.title_align);
+      const rowPadding = cssSize(cfg.row_padding, '6px');
+      const tankGap = cssSize(cfg.tank_gap, '6px');
       this.innerHTML = `<ha-card style="${cardBackgroundStyle(cfg)}height:100%;display:flex;flex-direction:column;"><style>
-.rvrow{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;align-items:center;padding:6px;flex:1;}
+.rvrow{display:flex;gap:${tankGap};flex-wrap:wrap;justify-content:center;align-items:center;padding:${rowPadding};flex:1;}
 .rvtitle{color:var(--primary-text-color);font-size:${rowTitleSize};font-weight:600;
   padding:10px 14px 0;font-family:var(--ha-card-header-font-family,inherit);
   text-align:${rowTitleAlign};line-height:1.25;}
@@ -1215,5 +1219,5 @@
       preview: true,
     },
   );
-  console.info('%cRV Tank Level Cards%c 0.2.8', 'color:#3a9aca;font-weight:700', 'color:inherit');
+  console.info('%cRV Tank Level Cards%c 0.2.9', 'color:#3a9aca;font-weight:700', 'color:inherit');
 })();
