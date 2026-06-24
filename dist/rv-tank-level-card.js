@@ -699,17 +699,7 @@
     { name: 'tank_radius', label: 'Rectangular tank radius', selector: { number: { min: 0, mode: 'box' } } },
   ];
 
-  const ROW_TANK_SCHEMA = [
-    { name: 'entity', label: 'Entity', required: true, selector: { entity: { domain: 'sensor' } } },
-    { name: 'name', label: 'Name', selector: { text: {} } },
-    { name: 'shape', label: 'Shape', selector: { select: { mode: 'dropdown', options: SHAPE_OPTIONS } } },
-    { name: 'color_scheme', label: 'Color scheme / CSS color', selector: { text: {} } },
-    { name: 'card_background', label: 'Card background CSS value', selector: { text: {} } },
-    { name: 'title_font_size', label: 'Title font size', selector: { text: {} } },
-    { name: 'title_align', label: 'Title alignment', selector: { select: { mode: 'dropdown', options: TITLE_ALIGN_OPTIONS } } },
-    { name: 'tank_scale', label: 'Tank scale', selector: { number: { min: 0.25, max: 2, step: 0.05, mode: 'box' } } },
-    { name: 'auto_color', label: 'Auto color', selector: { select: { mode: 'dropdown', options: AUTO_COLOR_OPTIONS } } },
-  ];
+  const ROW_TANK_SCHEMA = TANK_FORM_SCHEMA;
 
   const ROW_DEFAULTS_SCHEMA = [
     { name: 'shape', label: 'Default shape', selector: { select: { mode: 'dropdown', options: SHAPE_OPTIONS } } },
@@ -719,9 +709,22 @@
     { name: 'title_align', label: 'Default title alignment', selector: { select: { mode: 'dropdown', options: TITLE_ALIGN_OPTIONS } } },
     { name: 'tank_scale', label: 'Default tank scale', selector: { number: { min: 0.25, max: 2, step: 0.05, mode: 'box' } } },
     { name: 'auto_color', label: 'Default auto color', selector: { select: { mode: 'dropdown', options: AUTO_COLOR_OPTIONS } } },
+    { name: 'tap_action', label: 'Default tap action', selector: { select: { mode: 'dropdown', options: [
+      { value: 'more-info', label: 'More info' },
+      { value: 'none', label: 'None' },
+    ] } } },
     { name: 'gradient', label: 'Default gradient fill', selector: { boolean: {} } },
     { name: 'sparkline', label: 'Default sparkline', selector: { boolean: {} } },
     { name: 'trend', label: 'Default trend arrow', selector: { boolean: {} } },
+    { name: 'decimals', label: 'Default decimals', selector: { number: { min: 0, mode: 'box' } } },
+    { name: 'font_size', label: 'Default value font size', selector: { number: { min: 8, mode: 'box' } } },
+    { name: 'max_width', label: 'Default max width', selector: { text: {} } },
+    { name: 'value_format', label: 'Default value format', selector: { text: {} } },
+    { name: 'secondary', label: 'Default secondary text', selector: { text: {} } },
+    { name: 'icon', label: 'Default icon', selector: { text: {} } },
+    { name: 'tank_width', label: 'Default rectangular tank width', selector: { number: { min: 50, mode: 'box' } } },
+    { name: 'tank_height', label: 'Default rectangular tank height', selector: { number: { min: 50, mode: 'box' } } },
+    { name: 'tank_radius', label: 'Default rectangular tank radius', selector: { number: { min: 0, mode: 'box' } } },
   ];
 
   const ROW_MAIN_SCHEMA = [
@@ -1254,5 +1257,5 @@
       preview: true,
     },
   );
-  console.info('%cRV Tank Level Cards%c 0.2.12', 'color:#3a9aca;font-weight:700', 'color:inherit');
+  console.info('%cRV Tank Level Cards%c 0.2.13', 'color:#3a9aca;font-weight:700', 'color:inherit');
 })();

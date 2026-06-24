@@ -72,9 +72,9 @@ Current build behavior intentionally copies `src/rv-tank-level-card.js` to
 local development setup faithful to the existing card until the source is split
 into modules.
 
-The Home Assistant visual editor uses HA's native `ha-form` controls for common
-settings. Advanced nested options remain available through the YAML editor and
-the editor's Advanced JSON sections.
+The Home Assistant visual editor uses HA's native `ha-form` controls for scalar
+settings. Nested options (`colors`, `ticks`, `markers`, and `state`) remain
+available through the editor's Advanced JSON sections and the YAML editor.
 
 ## Quick start
 
@@ -195,8 +195,10 @@ Operators: `>=` `>` `<=` `<` `==` `!=` (default `>=`).
 | `row_padding` | Outer padding around the tank row. Numbers are treated as px; CSS sizes like `0`, `8px`, or `0.5rem` are accepted. |
 | `tank_gap` | Gap between tanks. Numbers are treated as px; CSS sizes are accepted. |
 
-Per-tank options such as `tank_scale`, `title_font_size`, and `title_align` can
-be set on each item in `tanks` or shared through `defaults`.
+Scalar per-tank options such as `tank_scale`, `title_font_size`, `font_size`,
+`max_width`, `secondary`, and `title_align` can be set on each item in `tanks`
+or shared through `defaults`. Nested per-tank options such as `colors`, `ticks`,
+`markers`, and `state` are edited through Advanced JSON.
 
 In Home Assistant Sections view, new single-tank cards default to a compact
 3-4 column footprint depending on shape/ticks, and content stays centered when

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.13 - 2026-06-24
+
+- Expands the row-card visual editor so per-tank rows expose the same scalar options as single-tank cards.
+- Adds more row-card default controls for scalar tank options such as tap action, value formatting, sizing, secondary text, and rectangular dimensions.
+
 ## 0.2.12 - 2026-06-24
 
 - Fixes repeated tank cards clipping or losing left edges in stacks by making SVG ids unique per card instance.
