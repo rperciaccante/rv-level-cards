@@ -133,6 +133,22 @@
   // Lighten any color toward white by t (used to derive a wave from a fill).
   const lighten = (str, t) => rgb(mixArr(toRgb(str) || [60, 60, 60], WHITE, t));
 
+  function relLuminance(color) {
+    const c = toRgb(color) || [60, 60, 60];
+    const linear = c.map((v) => {
+      const s = v / 255;
+      return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2];
+  }
+
+  function contrastText(color) {
+    const l = relLuminance(color);
+    const contrastWithDark = (l + 0.05) / 0.05;
+    const contrastWithLight = 1.05 / (l + 0.05);
+    return contrastWithDark >= contrastWithLight ? '#172033' : '#f8fbff';
+  }
+
   // Auto color a level: red (low) → amber → green (high). "waste" inverts it
   // so a FULL waste tank reads red (bad) and an empty one green (good).
   const _RED = [201, 60, 45], _AMBER = [230, 160, 40], _GREEN = [70, 190, 95];
@@ -407,6 +423,8 @@
     if (auto) { baseFill = autoColor(pct, auto); baseWave = lighten(baseFill, 0.28); }
     const fillColor = rule?.fill ? rule.fill : baseFill;
     const waveColor = rule?.fill ? (rule.wave || lighten(rule.fill, 0.28)) : baseWave;
+    const hasTextOverride = cfg.colors && typeof cfg.colors === 'object' && cfg.colors.text != null;
+    const labelColor = hasTextOverride || !available || pct <= 0 ? c.text : contrastText(fillColor);
 
     const gradient    = cfg.gradient === true;
     const liquidPaint = gradient ? `url(#lg_${uid})` : fillColor;
@@ -576,10 +594,10 @@
     ${trendSvg}
 
     <text x="${cx}" y="${f(labelY)}" text-anchor="middle" dominant-baseline="middle"
-          fill="${c.text}" font-size="${fontSize}" font-weight="700"
+          fill="${labelColor}" font-size="${fontSize}" font-weight="700"
           font-family="ui-sans-serif,system-ui,sans-serif" opacity=".95">${label}</text>
     ${secondary ? `<text x="${cx}" y="${f(secY)}" text-anchor="middle"
-          dominant-baseline="middle" fill="${c.text}" font-size="${f(fontSize * 0.32)}"
+          dominant-baseline="middle" fill="${labelColor}" font-size="${f(fontSize * 0.32)}"
           font-family="ui-sans-serif,sans-serif" opacity=".7">${secondary}</text>` : ''}
   </svg>
 </div>`;
@@ -1125,5 +1143,5 @@
       preview: true,
     },
   );
-  console.info('%cRV Tank Level Cards%c 0.2.3', 'color:#3a9aca;font-weight:700', 'color:inherit');
+  console.info('%cRV Tank Level Cards%c 0.2.4', 'color:#3a9aca;font-weight:700', 'color:inherit');
 })();

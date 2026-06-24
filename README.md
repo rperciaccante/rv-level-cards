@@ -25,6 +25,7 @@ Two custom cards are included:
 - Value-driven styling (card-mod `state:` compatible): recolor the card
   background **and/or the liquid**, with `blink` support
 - `card_background` accepts `transparent` or any CSS color/background value
+- Percentage text automatically contrasts against the active liquid color
 - Configurable or hideable side level markers, with custom labels & colors
 - Threshold `markers` drawn across the tank
 - `secondary` templated text, `sparkline`, and `trend` arrow
@@ -140,6 +141,11 @@ The card background follows your dashboard theme (dark and light shown).
 | `trend` | `false` | ▲/▼ change arrow from in-session history. |
 | `state` | — | card-mod-style threshold rules (see below). |
 | `tap_action` | `more-info` | `more-info` or `none`. |
+
+When `colors.text` is not set, the percentage and secondary text automatically
+switch between light/dark text based on the active liquid color. This keeps
+`auto_color` and state-driven fill changes readable on both light and dark
+themes.
 
 ### Value-driven styling (`state`)
 

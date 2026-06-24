@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.4 - 2026-06-24
+
+- Improves percentage and secondary-text contrast against auto-colored or state-colored liquid fills.
+
 ## 0.2.3 - 2026-06-24
 
 - Adds `card_background` support for `transparent`, `none`, or any CSS background value.
