@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.7 - 2026-06-24
+
+- Adds configurable title font size and alignment for tank titles and row-card headings.
+- Keeps wrapped two-line titles aligned instead of falling back to left alignment.
+- Adds `tank_scale` for shrinking or enlarging tank SVGs inside cramped dashboard blocks.
+
 ## 0.2.6 - 2026-06-24
 
 - Makes the empty SVG tank interior theme-aware instead of using a dark scheme background by default.

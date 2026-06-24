@@ -28,6 +28,8 @@ Two custom cards are included:
   the empty tank interior follows it unless `colors.tank_bg` is set
 - Tank caps/fittings follow the tank background and border colors
 - Percentage text automatically contrasts against the active liquid color
+- Title font size and alignment are configurable; wrapped titles stay aligned
+- `tank_scale` shrinks or enlarges tank SVGs inside cramped dashboard blocks
 - Configurable or hideable side level markers, with custom labels & colors
 - Threshold `markers` drawn across the tank
 - `secondary` templated text, `sparkline`, and `trend` arrow
@@ -127,6 +129,9 @@ The card background follows your dashboard theme (dark and light shown).
 | `color_scheme` | `blue` | `black` / `grey` / `blue`, or any CSS color. |
 | `colors` | — | Per-key overrides: `fill`, `wave`, `glow`, `border`, `text`, `bubble`, `tank_bg`. `tank_bg` overrides the empty SVG tank interior. |
 | `card_background` | theme default | Card, tank-panel, and empty tank background. Use `transparent`, `none`, or any CSS background value such as `rgba(0,0,0,.25)`. |
+| `title_font_size` | `.75rem` | Tank title font size. Numbers are treated as px; CSS sizes like `0.8rem` are accepted. |
+| `title_align` | `center` | Tank title alignment: `left`, `center`, or `right`. |
+| `tank_scale` | `1` | Multiplier for the SVG tank size inside the card. Use values like `0.75` for cramped blocks or `1.25` for larger cards. |
 | `gradient` | `false` | Glossy top-lit liquid. |
 | `auto_color` | `false` | `true`/`fresh` (high = green) or `waste` (high = red). |
 | `shape` | `default` | `default` / `propane` / `rectangular`. |
@@ -178,6 +183,12 @@ Operators: `>=` `>` `<=` `<` `==` `!=` (default `>=`).
 | `tanks` | **Required.** List of `rv-tank-level-card` configs. |
 | `defaults` | Optional config merged under every tank. |
 | `title` | Optional card heading. |
+| `card_background` | Optional row-card wrapper background; same behavior as `rv-tank-level-card`. |
+| `title_font_size` | Optional row-card heading font size. Numbers are treated as px; CSS sizes are accepted. |
+| `title_align` | Optional row-card heading alignment: `left`, `center`, or `right`. |
+
+Per-tank options such as `tank_scale`, `title_font_size`, and `title_align` can
+be set on each item in `tanks` or shared through `defaults`.
 
 > **Note on `sparkline`/`trend`:** history is kept in memory for the current
 > browser session (it resets on reload). For long-term history use a

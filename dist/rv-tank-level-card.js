@@ -263,6 +263,22 @@
     return `background:${bg};`;
   }
 
+  function cssSize(value, fallback) {
+    if (value == null || value === '') return fallback;
+    if (typeof value === 'number' || /^\d+(\.\d+)?$/.test(String(value))) return `${value}px`;
+    return String(value);
+  }
+
+  function titleAlign(value) {
+    return ['left', 'center', 'right'].includes(value) ? value : 'center';
+  }
+
+  function tankScale(value) {
+    const n = Number(value);
+    if (!Number.isFinite(n) || n <= 0) return 1;
+    return Math.max(0.25, Math.min(2, n));
+  }
+
   function tankBackground(cfg) {
     const explicit = cfg.colors && typeof cfg.colors === 'object' ? cfg.colors.tank_bg : null;
     if (explicit != null) return String(explicit);
@@ -391,6 +407,7 @@
                : (mw === 'none' || mw === 'full') ? 'none'
                : (typeof mw === 'number' || /^\d+$/.test(mw)) ? `${parseInt(mw, 10)}px`
                : String(mw);
+    const svgWidth = `${Math.round(tankScale(cfg.tank_scale) * 100)}%`;
 
     const fontSize = Number(cfg.font_size) || 54;
     const decimals = Number.isFinite(Number(cfg.decimals)) ? Number(cfg.decimals) : 0;
@@ -515,6 +532,8 @@
     const cardBg = cardBackgroundValue(cfg);
     const panelBg = cardBg ? (cardBg === 'none' ? 'transparent' : cardBg)
       : 'var(--ha-card-background,var(--card-background-color,#080c14))';
+    const titleSize = cssSize(cfg.title_font_size, '.75rem');
+    const align = titleAlign(cfg.title_align);
 
     return `
 <style>
@@ -522,10 +541,11 @@
   border-radius:var(--ha-card-border-radius,12px);padding:10px 6px 6px;
   display:flex;flex-direction:column;align-items:center;flex:1;min-width:120px;
   cursor:${tapCursor};}
-.rv${uid} .nm{color:var(--secondary-text-color,#6a7a8a);font-size:.75rem;
+.rv${uid} .nm{color:var(--secondary-text-color,#6a7a8a);font-size:${titleSize};
   font-family:var(--ha-card-header-font-family,ui-sans-serif,sans-serif);
-  text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px;}
-.rv${uid} svg{width:100%;max-width:${maxW};height:auto;display:block;margin:0 auto;}
+  text-transform:uppercase;letter-spacing:.1em;margin:0 auto 2px;width:100%;
+  text-align:${align};line-height:1.25;}
+.rv${uid} svg{width:${svgWidth};max-width:${maxW};height:auto;display:block;margin:0 auto;}
 .rv${uid} .wv{animation:rvWave_${uid} 3s linear infinite;}
 .rv${uid} .bb{animation:rvBub_${uid} var(--d) ease-in var(--dl) infinite;opacity:0;}
 @keyframes rvWave_${uid}{
@@ -626,12 +646,21 @@
     { value: 'waste', label: 'Waste: high is bad' },
   ];
 
+  const TITLE_ALIGN_OPTIONS = [
+    { value: 'center', label: 'Center' },
+    { value: 'left', label: 'Left' },
+    { value: 'right', label: 'Right' },
+  ];
+
   const TANK_FORM_SCHEMA = [
     { name: 'entity', label: 'Entity', required: true, selector: { entity: { domain: 'sensor' } } },
     { name: 'name', label: 'Name', selector: { text: {} } },
     { name: 'shape', label: 'Shape', selector: { select: { mode: 'dropdown', options: SHAPE_OPTIONS } } },
     { name: 'color_scheme', label: 'Color scheme / CSS color', selector: { text: {} } },
     { name: 'card_background', label: 'Card background CSS value', selector: { text: {} } },
+    { name: 'title_font_size', label: 'Title font size', selector: { text: {} } },
+    { name: 'title_align', label: 'Title alignment', selector: { select: { mode: 'dropdown', options: TITLE_ALIGN_OPTIONS } } },
+    { name: 'tank_scale', label: 'Tank scale', selector: { number: { min: 0.25, max: 2, step: 0.05, mode: 'box' } } },
     { name: 'auto_color', label: 'Auto color', selector: { select: { mode: 'dropdown', options: AUTO_COLOR_OPTIONS } } },
     { name: 'tap_action', label: 'Tap action', selector: { select: { mode: 'dropdown', options: [
       { value: 'more-info', label: 'More info' },
@@ -657,6 +686,9 @@
     { name: 'shape', label: 'Shape', selector: { select: { mode: 'dropdown', options: SHAPE_OPTIONS } } },
     { name: 'color_scheme', label: 'Color scheme / CSS color', selector: { text: {} } },
     { name: 'card_background', label: 'Card background CSS value', selector: { text: {} } },
+    { name: 'title_font_size', label: 'Title font size', selector: { text: {} } },
+    { name: 'title_align', label: 'Title alignment', selector: { select: { mode: 'dropdown', options: TITLE_ALIGN_OPTIONS } } },
+    { name: 'tank_scale', label: 'Tank scale', selector: { number: { min: 0.25, max: 2, step: 0.05, mode: 'box' } } },
     { name: 'auto_color', label: 'Auto color', selector: { select: { mode: 'dropdown', options: AUTO_COLOR_OPTIONS } } },
   ];
 
@@ -664,6 +696,9 @@
     { name: 'shape', label: 'Default shape', selector: { select: { mode: 'dropdown', options: SHAPE_OPTIONS } } },
     { name: 'color_scheme', label: 'Default color scheme / CSS color', selector: { text: {} } },
     { name: 'card_background', label: 'Default card background CSS value', selector: { text: {} } },
+    { name: 'title_font_size', label: 'Default title font size', selector: { text: {} } },
+    { name: 'title_align', label: 'Default title alignment', selector: { select: { mode: 'dropdown', options: TITLE_ALIGN_OPTIONS } } },
+    { name: 'tank_scale', label: 'Default tank scale', selector: { number: { min: 0.25, max: 2, step: 0.05, mode: 'box' } } },
     { name: 'auto_color', label: 'Default auto color', selector: { select: { mode: 'dropdown', options: AUTO_COLOR_OPTIONS } } },
     { name: 'gradient', label: 'Default gradient fill', selector: { boolean: {} } },
     { name: 'sparkline', label: 'Default sparkline', selector: { boolean: {} } },
@@ -673,12 +708,15 @@
   const ROW_MAIN_SCHEMA = [
     { name: 'title', label: 'Title', selector: { text: {} } },
     { name: 'card_background', label: 'Card background CSS value', selector: { text: {} } },
+    { name: 'title_font_size', label: 'Heading font size', selector: { text: {} } },
+    { name: 'title_align', label: 'Heading alignment', selector: { select: { mode: 'dropdown', options: TITLE_ALIGN_OPTIONS } } },
   ];
 
   const formKeys = (schema) => schema.map((item) => item.name);
   const TANK_FORM_KEYS = formKeys(TANK_FORM_SCHEMA);
   const ROW_TANK_KEYS = formKeys(ROW_TANK_SCHEMA);
   const ROW_DEFAULTS_KEYS = formKeys(ROW_DEFAULTS_SCHEMA);
+  const ROW_MAIN_KEYS = formKeys(ROW_MAIN_SCHEMA);
 
   function escapeHtml(value) {
     return String(value)
@@ -939,12 +977,10 @@
 
       if (form?.id === 'row-main-form') {
         ev.stopPropagation();
-        const title = value.title;
-        if (title === '' || title == null) delete next.title;
-        else next.title = title;
-        const cardBackground = value.card_background;
-        if (cardBackground === '' || cardBackground == null) delete next.card_background;
-        else next.card_background = cardBackground;
+        for (const key of ROW_MAIN_KEYS) {
+          if (value[key] === '' || value[key] == null) delete next[key];
+          else next[key] = value[key];
+        }
       } else if (form?.id === 'row-defaults-form') {
         ev.stopPropagation();
         const defaults = applyFormValues(next.defaults || {}, value, ROW_DEFAULTS_KEYS);
@@ -1052,6 +1088,7 @@
         shape: 'rectangular',
         tank_width: 170,
         tank_height: 120,
+        tank_scale: 0.85,
         font_size: 42,
         max_width: 170,
         ticks: false,
@@ -1120,10 +1157,13 @@
           tankMarkup(merged, this._hass, this._hist[key])}</div>`;
       }).join('');
       const title = cfg.title ? `<div class="rvtitle">${cfg.title}</div>` : '';
+      const rowTitleSize = cssSize(cfg.title_font_size, '1rem');
+      const rowTitleAlign = titleAlign(cfg.title_align);
       this.innerHTML = `<ha-card style="${cardBackgroundStyle(cfg)}"><style>
 .rvrow{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding:6px;}
-.rvtitle{color:var(--primary-text-color);font-size:1rem;font-weight:600;
-  padding:10px 14px 0;font-family:var(--ha-card-header-font-family,inherit);}
+.rvtitle{color:var(--primary-text-color);font-size:${rowTitleSize};font-weight:600;
+  padding:10px 14px 0;font-family:var(--ha-card-header-font-family,inherit);
+  text-align:${rowTitleAlign};line-height:1.25;}
 </style>${title}<div class="rvrow">${cols}</div></ha-card>`;
     }
 
@@ -1137,6 +1177,7 @@
           shape: 'rectangular',
           tank_width: 120,
           tank_height: 110,
+          tank_scale: 0.85,
           font_size: 32,
           max_width: 120,
           ticks: false,
@@ -1176,5 +1217,5 @@
       preview: true,
     },
   );
-  console.info('%cRV Tank Level Cards%c 0.2.6', 'color:#3a9aca;font-weight:700', 'color:inherit');
+  console.info('%cRV Tank Level Cards%c 0.2.7', 'color:#3a9aca;font-weight:700', 'color:inherit');
 })();
