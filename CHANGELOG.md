@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.6 - 2026-06-24
+
+- Makes the empty SVG tank interior theme-aware instead of using a dark scheme background by default.
+- Scales card picker stub configs so Home Assistant previews fit the picker tiles.
+- Makes tank caps and fittings follow the tank background and border colors.
+
 ## 0.2.5 - 2026-06-24
 
 - Fixes the Home Assistant card picker preview for single-tank cards when the stub entity does not exist.

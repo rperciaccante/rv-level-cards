@@ -263,6 +263,14 @@
     return `background:${bg};`;
   }
 
+  function tankBackground(cfg) {
+    const explicit = cfg.colors && typeof cfg.colors === 'object' ? cfg.colors.tank_bg : null;
+    if (explicit != null) return String(explicit);
+    const bg = cardBackgroundValue(cfg);
+    if (bg) return bg === 'none' ? 'transparent' : bg;
+    return 'var(--ha-card-background,var(--card-background-color,transparent))';
+  }
+
   // ── Side level markers (ticks) ───────────────────────────────────────────────
   //   cfg.ticks:  omitted          → default [0, 33, 66, 100]
   //               false/"none"/[]  → hidden
@@ -322,7 +330,7 @@
           `<rect x="${cx - 34}" y="44" width="68" height="22" rx="8"
                  fill="${c.tankBg}" stroke="${c.border}" stroke-width="2"/>
            <rect x="${cx - 11}" y="26" width="22" height="22" rx="4"
-                 fill="#101822" stroke="#1c2a38" stroke-width="2"/>
+                 fill="${c.tankBg}" stroke="${c.border}" stroke-width="2"/>
            <circle cx="${cx}" cy="20" r="11" fill="none" stroke="${c.border}" stroke-width="3"/>
            <circle cx="${cx}" cy="20" r="3.5" fill="${c.border}"/>`,
       };
@@ -344,7 +352,7 @@
         cap:
           // small inlet fitting on the top edge
           `<rect x="${tX + 26}" y="${tY - 16}" width="24" height="20" rx="4"
-                 fill="#101822" stroke="#1c2a38" stroke-width="2"/>`,
+                 fill="${c.tankBg}" stroke="${c.border}" stroke-width="2"/>`,
       };
     }
 
@@ -361,9 +369,9 @@
       decor: '',
       cap:
         `<rect x="90" y="2" width="60" height="36" rx="9"
-               fill="#101822" stroke="#1c2a38" stroke-width="2"/>
+               fill="${c.tankBg}" stroke="${c.border}" stroke-width="2"/>
          <rect x="99" y="5" width="42" height="29" rx="6"
-               fill="#080e16" stroke="#16222e" stroke-width="1.5"/>`,
+               fill="${c.tankBg}" stroke="${c.border}" stroke-width="1.5"/>`,
     };
   }
 
@@ -375,7 +383,8 @@
   //   hist — per-tank array used for the in-memory sparkline / trend
   function tankMarkup(cfg, hass, hist) {
     const name = cfg.name || cfg.entity;
-    const c    = resolveScheme(cfg);
+    const c    = Object.assign({}, resolveScheme(cfg));
+    c.tankBg = tankBackground(cfg);
     const uid  = (cfg.entity || 'tank').replace(/\W/g, '_');
     const mw   = cfg.max_width;
     const maxW = (mw == null) ? '280px'
@@ -1036,7 +1045,17 @@
     }
 
     static getStubConfig() {
-      return { entity: 'sensor.rv_tank_level', name: 'Tank', color_scheme: 'blue' };
+      return {
+        entity: 'sensor.rv_tank_level',
+        name: 'Tank',
+        color_scheme: 'blue',
+        shape: 'rectangular',
+        tank_width: 170,
+        tank_height: 120,
+        font_size: 42,
+        max_width: 170,
+        ticks: false,
+      };
     }
 
     static getConfigElement() {
@@ -1113,10 +1132,20 @@
       return { rows: 6, columns: 12, min_rows: 3, min_columns: 4, max_columns: 12 };
     }
     static getStubConfig() {
-      return { tanks: [
-        { entity: 'sensor.black_tank', name: 'Black', color_scheme: '#333333' },
-        { entity: 'sensor.grey_tank',  name: 'Grey',  color_scheme: 'grey' },
-      ] };
+      return {
+        defaults: {
+          shape: 'rectangular',
+          tank_width: 120,
+          tank_height: 110,
+          font_size: 32,
+          max_width: 120,
+          ticks: false,
+        },
+        tanks: [
+          { entity: 'sensor.black_tank', name: 'Black', color_scheme: '#333333' },
+          { entity: 'sensor.grey_tank',  name: 'Grey',  color_scheme: 'grey' },
+        ],
+      };
     }
 
     static getConfigElement() {
@@ -1147,5 +1176,5 @@
       preview: true,
     },
   );
-  console.info('%cRV Tank Level Cards%c 0.2.5', 'color:#3a9aca;font-weight:700', 'color:inherit');
+  console.info('%cRV Tank Level Cards%c 0.2.6', 'color:#3a9aca;font-weight:700', 'color:inherit');
 })();

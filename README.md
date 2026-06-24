@@ -24,7 +24,9 @@ Two custom cards are included:
 - `auto_color`: automatic green → amber → red by level (`fresh` or `waste`)
 - Value-driven styling (card-mod `state:` compatible): recolor the card
   background **and/or the liquid**, with `blink` support
-- `card_background` accepts `transparent` or any CSS color/background value
+- `card_background` accepts `transparent` or any CSS color/background value;
+  the empty tank interior follows it unless `colors.tank_bg` is set
+- Tank caps/fittings follow the tank background and border colors
 - Percentage text automatically contrasts against the active liquid color
 - Configurable or hideable side level markers, with custom labels & colors
 - Threshold `markers` drawn across the tank
@@ -123,8 +125,8 @@ The card background follows your dashboard theme (dark and light shown).
 | `entity` | — | **Required.** Sensor with a 0–100 numeric state. |
 | `name` | entity id | Card title. |
 | `color_scheme` | `blue` | `black` / `grey` / `blue`, or any CSS color. |
-| `colors` | — | Per-key overrides: `fill`, `wave`, `glow`, `border`, `text`, `bubble`, `tank_bg`. |
-| `card_background` | theme default | Card and tank-panel background. Use `transparent`, `none`, or any CSS background value such as `rgba(0,0,0,.25)`. |
+| `colors` | — | Per-key overrides: `fill`, `wave`, `glow`, `border`, `text`, `bubble`, `tank_bg`. `tank_bg` overrides the empty SVG tank interior. |
+| `card_background` | theme default | Card, tank-panel, and empty tank background. Use `transparent`, `none`, or any CSS background value such as `rgba(0,0,0,.25)`. |
 | `gradient` | `false` | Glossy top-lit liquid. |
 | `auto_color` | `false` | `true`/`fresh` (high = green) or `waste` (high = red). |
 | `shape` | `default` | `default` / `propane` / `rectangular`. |
@@ -146,6 +148,10 @@ When `colors.text` is not set, the percentage and secondary text automatically
 switch between light/dark text based on the active liquid color. This keeps
 `auto_color` and state-driven fill changes readable on both light and dark
 themes.
+
+When `colors.tank_bg` is not set, the empty part of the SVG tank and its
+cap/fitting follow `card_background`, then the Home Assistant card theme. Set
+`colors.tank_bg` when you want the empty tank interior to stay a specific color.
 
 ### Value-driven styling (`state`)
 
