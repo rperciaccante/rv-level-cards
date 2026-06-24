@@ -27,6 +27,7 @@ Two custom cards are included:
 - Configurable or hideable side level markers, with custom labels & colors
 - Threshold `markers` drawn across the tank
 - `secondary` templated text, `sparkline`, and `trend` arrow
+- Home Assistant visual editor support for common options
 - Follows your dashboard theme; tap to open the entity's more-info dialog
 - Resizes cleanly in Sections (grid) view
 
@@ -37,7 +38,7 @@ Two custom cards are included:
 1. HACS → ⋮ → **Custom repositories** → add this repo's URL, category **Dashboard**.
 2. Install **RV Tank Level Cards**.
 3. HACS adds the resource automatically. If you added it manually, use:
-   - URL: `/hacsfiles/home-assistant-cards/rv-tank-level-card.js`
+   - URL: `/hacsfiles/rv-level-cards/rv-tank-level-card.js`
    - Type: **JavaScript module**
 
 ### Manual
@@ -46,6 +47,20 @@ Two custom cards are included:
 2. Settings → Dashboards → Resources → Add:
    - URL: `/local/rv-tank-level-card.js`
    - Type: **JavaScript module**
+
+## Development
+
+The editable source lives in `src/rv-tank-level-card.js`. The HACS/manual-install
+artifact is generated at `dist/rv-tank-level-card.js`.
+
+```bash
+npm run verify
+```
+
+Current build behavior intentionally copies `src/rv-tank-level-card.js` to
+`dist/rv-tank-level-card.js` without transpilation or bundling. This keeps the
+local development setup faithful to the existing card until the source is split
+into modules.
 
 ## Quick start
 
