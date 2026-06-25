@@ -1,7 +1,7 @@
 /**
- * rv-tank-level-card — Home Assistant Lovelace custom card
+ * Tank Level Cards — Home Assistant Lovelace custom cards
  *
- * Displays an animated tank fill visualization for RV black/grey waste tanks.
+ * Displays animated tank fill visualizations for Home Assistant dashboards.
  *
  * Installation:
  *   1. Copy this file to <ha-config>/www/rv-tank-level-card.js
@@ -19,7 +19,7 @@
  *          { fill: "#1a7", wave: "#3c9", border: "#2b8", text: "#dff",
  *            glow: "#4ca", bubble: "rgba(40,200,140,.4)", tank_bg: "#021" }
  *        gradient: false                   # true = glossy top-lit liquid
- *        shape: default                    # "default" | "propane" | "rectangular"
+ *        shape: default                    # default | propane | rectangular | heating_oil | pool
  *        tank_width: 220                   # rectangular only (viewBox px)
  *        tank_height: 150                  # rectangular only (viewBox px)
  *        max_width: 280                    # px cap; "none"/"full" = fill column.
@@ -330,6 +330,8 @@
   //   shape: "default"     rounded jerry-can (original)
   //          "propane"     vertical cylinder with domed ends + valve
   //          "rectangular" flat tank, configurable tank_width / tank_height
+  //          "heating_oil" horizontal oval heating-oil tank
+  //          "pool"        above-ground pool side profile
   //   gutter: right-side space reserved for the tick scale (trimmed when ticks
   //           are hidden so the tank isn't lopsided).
   function tankGeometry(shape, cfg, c, uid, gutter = 60) {
@@ -360,6 +362,52 @@
                  fill="${c.tankBg}" stroke="${c.border}" stroke-width="2"/>
            <circle cx="${cx}" cy="20" r="11" fill="none" stroke="${c.border}" stroke-width="3"/>
            <circle cx="${cx}" cy="20" r="3.5" fill="${c.border}"/>`,
+      };
+    }
+
+    if (shape === 'heating_oil' || shape === 'heating-oil' || shape === 'oil') {
+      const tX = 20, tY = 64, tW = 230, tH = 132, tBot = tY + tH;
+      const rx = 66, ry = 58, cx = tX + tW / 2;
+      const rect = (extra) =>
+        `<rect x="${tX}" y="${tY}" width="${tW}" height="${tH}" rx="${rx}" ry="${ry}" ${extra}/>`;
+      return {
+        vbW: tX + tW + gutter, vbH: tBot + 36, tX, tY, tW, tH, tBot, tickX: tX + tW + 12,
+        clip: rect(''),
+        shell: rect(`fill="${c.tankBg}" stroke="${c.border}" stroke-width="3" ${glow}`),
+        interiorBg: rect(`fill="${c.tankBg}"`),
+        shellEdge: rect(`fill="none" stroke="${c.border}" stroke-width="2"`),
+        decor:
+          `<rect x="${tX + 34}" y="${tBot - 6}" width="26" height="28" rx="4"
+                 fill="${c.tankBg}" stroke="${c.border}" stroke-width="2"/>
+           <rect x="${tX + tW - 60}" y="${tBot - 6}" width="26" height="28" rx="4"
+                 fill="${c.tankBg}" stroke="${c.border}" stroke-width="2"/>`,
+        cap:
+          `<rect x="${cx - 16}" y="${tY - 18}" width="32" height="22" rx="5"
+                 fill="${c.tankBg}" stroke="${c.border}" stroke-width="2"/>
+           <circle cx="${tX + tW - 42}" cy="${tY + 18}" r="11" fill="none"
+                   stroke="${c.border}" stroke-width="2"/>
+           <line x1="${tX + tW - 49}" y1="${tY + 18}" x2="${tX + tW - 38}" y2="${tY + 12}"
+                 stroke="${c.border}" stroke-width="2" stroke-linecap="round"/>`,
+      };
+    }
+
+    if (shape === 'pool' || shape === 'above_ground_pool' || shape === 'above-ground-pool') {
+      const tW = num(cfg.tank_width, 250), tH = num(cfg.tank_height, 118);
+      const tX = 20, tY = 74, tBot = tY + tH, tR = num(cfg.tank_radius, 18);
+      const rect = (extra) =>
+        `<rect x="${tX}" y="${tY}" width="${tW}" height="${tH}" rx="${tR}" ${extra}/>`;
+      return {
+        vbW: tX + tW + gutter, vbH: tBot + 26, tX, tY, tW, tH, tBot, tickX: tX + tW + 12,
+        clip: rect(''),
+        shell: `${rect(`fill="${c.tankBg}" stroke="${c.border}" stroke-width="3" ${glow}`)}
+                <path d="M ${tX + 8},${tY + 14} Q ${tX + tW / 2},${tY - 12} ${tX + tW - 8},${tY + 14}"
+                      fill="none" stroke="${c.border}" stroke-width="2" opacity=".75"/>`,
+        interiorBg: rect(`fill="${c.tankBg}"`),
+        shellEdge: rect(`fill="none" stroke="${c.border}" stroke-width="2"`),
+        decor: '',
+        cap:
+          `<path d="M ${tX + tW - 26},${tY - 2} v-28 m0,28 h18 m-18,18 h18 m-9,-46 v64"
+                 fill="none" stroke="${c.border}" stroke-width="2.5" stroke-linecap="round" opacity=".9"/>`,
       };
     }
 
@@ -650,6 +698,8 @@
   const SHAPE_OPTIONS = [
     { value: 'default', label: 'Default / jerry-can' },
     { value: 'propane', label: 'Propane' },
+    { value: 'heating_oil', label: 'Heating oil' },
+    { value: 'pool', label: 'Above-ground pool' },
     { value: 'rectangular', label: 'Rectangular' },
     { value: 'flat', label: 'Flat alias' },
   ];
@@ -1101,7 +1151,7 @@
       const cfg    = this._config || {};
       const shape  = (cfg.shape || 'default').toLowerCase();
       const hasTicks = resolveTicks(cfg).length > 0;
-      const wide = shape === 'rectangular' || shape === 'flat';
+      const wide = ['rectangular', 'flat', 'heating_oil', 'heating-oil', 'oil', 'pool', 'above_ground_pool', 'above-ground-pool'].includes(shape);
       const columns = wide || hasTicks ? 4 : 3;
       const rows = wide ? 3 : 4;
       return { rows, columns, min_rows: 2, min_columns: 2, max_columns: 8 };
@@ -1251,16 +1301,16 @@
   window.customCards.push(
     {
       type: 'rv-tank-level-card',
-      name: 'RV Tank Level Card',
-      description: 'Animated tank fill visualization for RV black / grey waste tanks',
+      name: 'Tank Level Card',
+      description: 'Animated tank fill visualization for level sensors',
       preview: true,
     },
     {
       type: 'rv-tank-row-card',
-      name: 'RV Tank Row Card',
-      description: 'Several animated tank gauges side by side in one card',
+      name: 'Tank Row Card',
+      description: 'Several animated tank gauges in one card',
       preview: true,
     },
   );
-  console.info('%cRV Tank Level Cards%c 0.2.14', 'color:#3a9aca;font-weight:700', 'color:inherit');
+  console.info('%cTank Level Cards%c 0.3.0', 'color:#3a9aca;font-weight:700', 'color:inherit');
 })();

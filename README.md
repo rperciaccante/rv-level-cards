@@ -1,12 +1,13 @@
-# RV Tank Level Cards for Home Assistant
+# Tank Level Cards for Home Assistant
 
 Animated, highly configurable tank-level cards for Home Assistant Lovelace
-dashboards — built for RV black / grey / fresh water and propane tanks, but
-useful for any 0–100 level sensor.
+dashboards — built for RV black / grey / fresh water and propane tanks, heating
+oil tanks, above-ground pools, and any other 0–100 level sensor.
 
 ![Tank shapes](images/shapes.png)
 
-Two custom cards are included:
+Two custom cards are included. The custom element names retain the original
+`rv-` prefix for backward compatibility:
 
 - **`rv-tank-level-card`** — a single animated tank gauge
 - **`rv-tank-row-card`** — several tanks side by side in one card
@@ -17,8 +18,8 @@ Two custom cards are included:
 ## Features
 
 - Animated liquid wave, rising bubbles, and smooth fill transitions
-- Three tank shapes: `default` (jerry-can), `propane` cylinder, and a
-  `rectangular`/flat tank with configurable width & height
+- Six tank shapes: `default` (jerry-can), `propane`, `heating_oil`, `pool`,
+  `rectangular`, and `flat`
 - Any CSS color for the liquid (named / hex / rgb) or fine-grained `colors:`
   overrides — plus optional `gradient`
 - `auto_color`: automatic green → amber → red by level (`fresh` or `waste`)
@@ -45,7 +46,7 @@ Two custom cards are included:
 ### HACS (recommended)
 
 1. HACS → ⋮ → **Custom repositories** → add this repo's URL, category **Dashboard**.
-2. Install **RV Tank Level Cards**.
+2. Install **Tank Level Cards**.
 3. HACS adds the resource automatically. If you added it manually, use:
    - URL: `/hacsfiles/rv-level-cards/rv-tank-level-card.js`
    - Type: **JavaScript module**
@@ -86,7 +87,8 @@ color_scheme: black
 ```
 
 See [`examples/dashboard.yaml`](examples/dashboard.yaml) for more, including the
-multi-tank card, markers, auto-color, propane, and threshold styling.
+multi-tank card, markers, auto-color, propane, heating oil, above-ground pool,
+and threshold styling.
 
 ## Screenshots
 
@@ -96,7 +98,8 @@ new spacing/scaling controls.
 
 ### Tank colors & gradient
 Any CSS color drives the whole palette; `colors:` overrides individual parts,
-and `gradient: true` adds a glossy top-lit fill.
+and `gradient: true` adds a glossy top-lit fill. Propane and heating-oil shapes
+are included in the current screenshots.
 
 ![Custom colors](images/colors.png)
 
@@ -143,7 +146,7 @@ The card background follows your dashboard theme (dark and light shown).
 | `tank_scale` | `1` | Multiplier for the SVG tank size inside the card. Use values like `0.75` for cramped blocks or `1.25` for larger cards. |
 | `gradient` | `false` | Glossy top-lit liquid. |
 | `auto_color` | `false` | `true`/`fresh` (high = green) or `waste` (high = red). |
-| `shape` | `default` | `default` / `propane` / `rectangular`. |
+| `shape` | `default` | `default` / `propane` / `heating_oil` / `pool` / `rectangular` / `flat`. |
 | `tank_width`, `tank_height`, `tank_radius` | `220`/`150`/`12` | Rectangular shape only (viewBox px). |
 | `ticks` | `[0,33,66,100]` | Custom levels; `false`/`[]` to hide. Items may be `{value,label,color}`. |
 | `markers` | — | Threshold lines: `{value,label,color,dashed}`. |

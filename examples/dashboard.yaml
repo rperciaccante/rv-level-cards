@@ -43,9 +43,26 @@
       fill: "#c0392b"
       blink: true
 
-# 5) All three holding tanks in one card
+# 5) Heating oil tank
+- type: custom:rv-tank-level-card
+  entity: sensor.heating_oil_level
+  name: Heating Oil
+  shape: heating_oil
+  color_scheme: "#6b7280"
+  gradient: true
+
+# 6) Above-ground pool
+- type: custom:rv-tank-level-card
+  entity: sensor.pool_level
+  name: Pool
+  shape: pool
+  color_scheme: "#0ea5e9"
+  tank_width: 260
+  tank_height: 120
+
+# 7) All three holding tanks in one card
 - type: custom:rv-tank-row-card
-  title: RV Holding Tanks
+  title: Holding Tanks
   defaults:
     shape: rectangular
     tank_width: 170

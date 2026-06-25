@@ -21,6 +21,8 @@ const states = {
   'sensor.low_tank': { state: '13', attributes: { unit_of_measurement: '%' } },
   'sensor.mid_tank': { state: '55', attributes: { unit_of_measurement: '%' } },
   'sensor.full_tank': { state: '91', attributes: { unit_of_measurement: '%' } },
+  'sensor.heating_oil_level': { state: '62', attributes: { unit_of_measurement: '%' } },
+  'sensor.pool_level': { state: '78', attributes: { unit_of_measurement: '%' } },
   'sensor.one': { state: '66', attributes: { unit_of_measurement: '%' } },
   'sensor.two': { state: '48', attributes: { unit_of_measurement: '%' } },
 };
@@ -120,16 +122,18 @@ function shot(name, width, height, body, configs, extraCss = '') {
 const tank = (config) => ({ type: 'rv-tank-level-card', config });
 const row = (config) => ({ type: 'rv-tank-row-card', config });
 
-shot('shapes', 820, 330, '<div id="cards" class="grid three"></div>', [
+shot('shapes', 980, 520, '<div id="cards" class="grid shapes-grid"></div>', [
   tank({ entity: 'sensor.black_tank_level', name: 'Jerry Can', color_scheme: '#2f343b', shape: 'default', tank_scale: 0.82, max_width: 180 }),
   tank({ entity: 'sensor.fresh_water_level', name: 'Flat Fresh Tank', color_scheme: 'blue', shape: 'rectangular', tank_width: 220, tank_height: 130, tank_scale: 0.9, max_width: 190 }),
   tank({ entity: 'sensor.propane_level', name: 'Propane Bottle', color_scheme: '#f0b44f', shape: 'propane', gradient: true, tank_scale: 0.78, max_width: 170 }),
-]);
+  tank({ entity: 'sensor.heating_oil_level', name: 'Heating Oil', color_scheme: '#6b7280', shape: 'heating_oil', gradient: true, tank_scale: 0.85, max_width: 210 }),
+  tank({ entity: 'sensor.pool_level', name: 'Above-Ground Pool', color_scheme: '#0ea5e9', shape: 'pool', tank_width: 250, tank_height: 115, tank_scale: 0.9, max_width: 220 }),
+], '.shapes-grid { grid-template-columns: repeat(3, 280px); } .shapes-grid .cardbox:nth-child(4) { grid-column: 1 / span 1; }');
 
 shot('colors', 860, 290, '<div id="cards" class="grid four"></div>', [
   tank({ entity: 'sensor.fresh_water_level', name: 'Blue', color_scheme: 'blue', shape: 'rectangular', tank_width: 190, tank_height: 120, max_width: 150, tank_scale: 0.86 }),
   tank({ entity: 'sensor.mid_tank', name: 'Teal', color_scheme: '#0f9f8f', shape: 'rectangular', tank_width: 190, tank_height: 120, max_width: 150, tank_scale: 0.86 }),
-  tank({ entity: 'sensor.propane_level', name: 'Propane', color_scheme: '#f0b44f', shape: 'propane', gradient: true, max_width: 130, tank_scale: 0.78 }),
+  tank({ entity: 'sensor.heating_oil_level', name: 'Heating Oil', color_scheme: '#6b7280', shape: 'heating_oil', gradient: true, max_width: 160, tank_scale: 0.8 }),
   tank({ entity: 'sensor.full_tank', name: 'Waste', color_scheme: '#5a4638', auto_color: 'waste', shape: 'rectangular', tank_width: 190, tank_height: 120, max_width: 150, tank_scale: 0.86 }),
 ]);
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0 - 2026-06-25
+
+- Renames user-facing branding to **Tank Level Cards** while keeping existing `custom:rv-*` card types for compatibility.
+- Adds `heating_oil` tank shape for horizontal heating oil tanks.
+- Adds `pool` tank shape for above-ground pools.
+- Updates examples and screenshots for the broader tank scope.
+
 ## 0.2.14 - 2026-06-24
 
 - Scopes row-card layout CSS per card instance so vertical and horizontal row cards can coexist on the same dashboard.
